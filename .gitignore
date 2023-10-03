@@ -1,8 +1,11 @@
 # Ignore all files
 *
 
-# Unignore .cpp and .py files
+# Unignore specific file types
 !*.cpp
 !*.py
 !*.md
 !*.sh
+
+
+
