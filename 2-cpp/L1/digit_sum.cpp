@@ -1,10 +1,20 @@
 #include <iostream>
 
 int main() {
+    long long int number; 
+    int sum = 0;
 
-    // Your C++ code for Summation of the digits of an integer entered by the user goes here
-    
+    std::cout << "Enter an integer: ";
+    std::cin >> number;
+
+
+    while (number > 0) {
+        int digit = number % 10;
+        sum += digit; 
+        number /= 10; 
+    }
+
+    std::cout << "The sum of digits is: " << sum << std::endl;
+
     return 0;
-
 }
-
