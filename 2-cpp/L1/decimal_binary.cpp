@@ -4,7 +4,7 @@
 int main() {
 
     // Your C++ code for Summation of the digits of an integer entered by the user goes here
-    int dec {};
+    int dec ;;
     std::cout << "Enter a decimal number: ";
     std::cin >> dec;
     std::cout << std::endl;

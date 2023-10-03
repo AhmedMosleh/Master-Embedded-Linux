@@ -5,7 +5,7 @@
 
 int main() {
     std::vector<int> vowels {'a','e','i','o','u'};
-    char letter {};
+    char letter ;;
     
     std::cin >> letter;
 
