@@ -1,11 +1,2 @@
-# Ignore all files
-*
-
-# Unignore specific file types
-!*.cpp
-!*.py
-!*.md
-!*.sh
-
-
-
+*.exe
+*.vscode
