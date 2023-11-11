@@ -12,9 +12,9 @@ public:
   CommandExecutor();
   ~CommandExecutor();
   void run(std::string cmd);
-
-private:
   bool takeCommand(std::string cmd);
+private:
+  
   bool executeCommand(const std::string &command);
   std::map<std::string, std::string> req_to_cmd;
 };

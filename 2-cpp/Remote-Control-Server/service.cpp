@@ -12,10 +12,13 @@ int main() {
     SocketHandler soc(PORT);
     soc.serverInit();
     soc.sendString("how are you?");
-    std::cout << soc.receiveString() << std::endl;
+    std::string str = soc.receiveString();
+    std::cout << str << std::endl;
+    exe.takeCommand(str);
+
 
     while (true) {
-        // exe.run();
+        // exe.run("");
         // soc.receiveCommand();
     }
     return 0;
