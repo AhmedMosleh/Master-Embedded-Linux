@@ -4,17 +4,19 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <map>
 #include <string>
 
 class CommandExecutor {
 public:
-    CommandExecutor();
-    ~CommandExecutor();
+  CommandExecutor();
+  ~CommandExecutor();
+  void run(std::string cmd);
 
-    void run();
 private:
-    bool takeCommand();
-    bool executeCommand(const std::string& command);
+  bool takeCommand(std::string cmd);
+  bool executeCommand(const std::string &command);
+  std::map<std::string, std::string> req_to_cmd;
 };
 
 #endif // COMMAND_EXECUTOR_HPP

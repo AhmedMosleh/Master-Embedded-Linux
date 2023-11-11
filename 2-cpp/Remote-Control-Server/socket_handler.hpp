@@ -14,6 +14,7 @@ public:
     SocketHandler(int port);
     ~SocketHandler();
 
+    void serverInit();
     bool startServer();
     bool acceptConnection();
     std::string receiveCommand();

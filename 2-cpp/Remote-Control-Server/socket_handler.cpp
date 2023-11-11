@@ -31,16 +31,19 @@
 //   serverAddr.sin_port = htons(PORT);
 
 //   // 3. Bind the Socket:
-//   // The bind system call associates the socket with the specified address and
+//   // The bind system call associates the socket with the specified address
+//   and
 //   // port.
-//   if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) <
+//   if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr))
+//   <
 //       0) {
 //     perror("Bind failed");
 //     return -1;
 //   }
 
 //   // 4. Listen for Incoming Connections
-//   //   The listen function allows the server to accept incoming connections. The
+//   //   The listen function allows the server to accept incoming connections.
+//   The
 //   //   second argument (5 in this case) is the maximum number of pending
 //   //   connections that can be in the queue.
 //   if (listen(serverSocket, 5) < 0) {
@@ -49,7 +52,8 @@
 //   }
 
 //   // Accept Incoming Connection
-//   //   The accept system call blocks until a client connects to the server. It
+//   //   The accept system call blocks until a client connects to the server.
+//   It
 //   //   returns a new socket descriptor (newSocket) for communication with the
 //   //   connected client.
 //   if ((newSocket = accept(serverSocket, (struct sockaddr *)&clientAddr,
@@ -84,63 +88,88 @@
 //   return 0;
 // }
 
-
 // socket_handler.cpp
 #include "socket_handler.hpp"
 
 SocketHandler::SocketHandler(int port) {
-    serverSocket = 0;
-    newSocket = 0;
+  // 1. Create socket:
+  // we create a new socket using the socket system call.
+  // The AF_INET argument specifies the address family (IPv4),
+  // SOCK_STREAM specifies the socket type (TCP).
+  serverSocket = 0;
+  newSocket = 0;
+  addrSize = sizeof(struct sockaddr_in);
 
-    addrSize = sizeof(struct sockaddr_in);
-
-    if ((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        perror("Socket creation failed");
-    }
-
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_addr.s_addr = INADDR_ANY;
-    serverAddr.sin_port = htons(port);
+  if ((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+    perror("Socket creation failed");
+  }
+  // 2. Set Up Server Address Structure:
+  // initializes the server address structure.
+  // It sets the address family to IPv4,
+  // binds the server to any available network interface (INADDR_ANY),
+  // specifies the port number in network byte order using htons.
+  serverAddr.sin_family = AF_INET;
+  serverAddr.sin_addr.s_addr = INADDR_ANY;
+  serverAddr.sin_port = htons(port);
 }
 
 SocketHandler::~SocketHandler() {
-    close(serverSocket);
-    close(newSocket);
+  close(serverSocket);
+  close(newSocket);
 }
 
+void SocketHandler::serverInit() {
+    startServer();
+    acceptConnection();
+}
+
+
 bool SocketHandler::startServer() {
-    if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
-        perror("Bind failed");
-        return false;
-    }
+  // 3. Bind the Socket:
+  // The bind system call associates the socket with the specified address and
+  // port.
+  if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) <
+      0) {
+    perror("Bind failed");
+    return false;
+  }
 
-    if (listen(serverSocket, 5) < 0) {
-        perror("Listen failed");
-        return false;
-    }
+  // 4. Listen for Incoming Connections
+  //  The listen function allows the server to accept incoming connections.
+  //  The second argument (5 in this case) is the maximum number of pending
+  //  connections that can be in the queue.
+  if (listen(serverSocket, 5) < 0) {
+    perror("Listen failed");
+    return false;
+  }
 
-    return true;
+  return true;
 }
 
 bool SocketHandler::acceptConnection() {
-    if ((newSocket = accept(serverSocket, (struct sockaddr *)&clientAddr, &addrSize)) < 0) {
-        perror("Accept failed");
-        return false;
-    }
+  // 5. Accept Incoming Connection
+  // The accept system call blocks until a client connects to the server.
+  // It returns a new socket descriptor (newSocket) for communication with the
+  // connected client.
+  if ((newSocket = accept(serverSocket, (struct sockaddr *)&clientAddr,
+                          &addrSize)) < 0) {
+    perror("Accept failed");
+    return false;
+  }
 
-    std::cout << "Connection established with client" << std::endl;
-    return true;
+  std::cout << "Connection established with client" << std::endl;
+  return true;
 }
 
 std::string SocketHandler::receiveCommand() {
-    char buffer[1024] = {0};
-    int bytesRead = recv(newSocket, buffer, sizeof(buffer), 0);
+  char buffer[1024] = {0};
+  int bytesRead = recv(newSocket, buffer, sizeof(buffer), 0);
 
-    if (bytesRead > 0) {
-        std::cout << "Received command from client: " << buffer << std::endl;
-        return std::string(buffer);
-    } else {
-        std::cerr << "Failed to receive command from client." << std::endl;
-        return "";
-    }
+  if (bytesRead > 0) {
+    std::cout << "Received command from client: " << buffer << std::endl;
+    return std::string(buffer);
+  } else {
+    std::cerr << "Failed to receive command from client." << std::endl;
+    return "";
+  }
 }
