@@ -12,12 +12,9 @@ public:
     ~CommandExecutor();
 
     void run();
-
 private:
     bool takeCommand();
     bool executeCommand(const std::string& command);
-
-    // Add any additional member variables or functions as needed
 };
 
 #endif // COMMAND_EXECUTOR_HPP
