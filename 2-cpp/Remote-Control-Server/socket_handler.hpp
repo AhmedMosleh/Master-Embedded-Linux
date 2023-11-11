@@ -17,7 +17,8 @@ public:
     void serverInit();
     bool startServer();
     bool acceptConnection();
-    std::string receiveCommand();
+    std::string receiveString();
+    bool sendString(const std::string& message);
 
 private:
     int serverSocket;

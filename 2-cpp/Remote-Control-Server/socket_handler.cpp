@@ -161,15 +161,28 @@ bool SocketHandler::acceptConnection() {
   return true;
 }
 
-std::string SocketHandler::receiveCommand() {
-  char buffer[1024] = {0};
-  int bytesRead = recv(newSocket, buffer, sizeof(buffer), 0);
+std::string SocketHandler::receiveString() {
+    char buffer[1024] = {0};
+    int bytesRead = recv(newSocket, buffer, sizeof(buffer), 0);
 
-  if (bytesRead > 0) {
-    std::cout << "Received command from client: " << buffer << std::endl;
-    return std::string(buffer);
-  } else {
-    std::cerr << "Failed to receive command from client." << std::endl;
-    return "";
-  }
+    if (bytesRead > 0) {
+        std::cout << "Received string from client: " << buffer << std::endl;
+        return std::string(buffer);
+    } else {
+        std::cerr << "Failed to receive string from client." << std::endl;
+        return "";
+    }
+}
+
+
+bool SocketHandler::sendString(const std::string& message) {
+    int bytesSent = send(newSocket, message.c_str(), message.length(), 0);
+
+    if (bytesSent != -1) {
+        std::cout << "Sent string to client: " << message << std::endl;
+        return true;
+    } else {
+        std::cerr << "Failed to send string to client." << std::endl;
+        return false;
+    }
 }
