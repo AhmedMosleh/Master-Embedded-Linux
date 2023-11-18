@@ -26,7 +26,11 @@ String::String(const String & c_str){
     *this->str = *c_str.str;
 }
 String::String(String && expired_str){ 
+    this->size = expired_str.size;
+    expired_str.size = 0;
 
+    this->str = expired_str.str;
+    expired_str.str = nullptr;
 }
 String String::operator=(const String & c_str){
     if(this != & c_str) {
@@ -40,7 +44,19 @@ String String::operator=(const String & c_str){
     return *this;
 }
 String& String::operator=(String && expired_str) { 
+    if(this != &expired_str) {
+        this->size = expired_str.size;
+        expired_str.size = 0;
 
+        if (this->str) {
+            delete [] this->str;       
+        }
+
+        this->str = expired_str.str;
+         expired_str.str = nullptr;
+
+    }
+    return *this;
 }
 String::~String() { 
     if(!this->str)
